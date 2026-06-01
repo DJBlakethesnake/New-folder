@@ -12,7 +12,8 @@ def create_app():
     os.makedirs(app.instance_path, exist_ok=True)
 
     app.config["SECRET_KEY"] = "change-this-secret-key"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(app.instance_path, DB_NAME)
+    DB_PATH = "/home/students/even/2028/bdavis80/public_html/New-folder/instance/database.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + DB_PATH
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
