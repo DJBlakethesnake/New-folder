@@ -32,31 +32,35 @@ def get_events():
 @views.route("/events", methods=["POST"])
 @login_required
 def add_event():
-    try:
-        data = request.get_json()
+    data = request.get_json(silent=True)
 
-        print("EVENT DATA:", data)
+    if not data:
+        return jsonify({"error": "Missing JSON data"}), 400
 
-        new_event = CalendarEvent(
-            title=data["title"],
-            start=data["start"],
-            end=data.get("end"),
-            user_id=current_user.id
-        )
+    title = data.get("title")
+    start = data.get("start")
+    end = data.get("end")
 
-        db.session.add(new_event)
-        db.session.commit()
+    if not title or not start:
+        return jsonify({"error": "Title and start are required"}), 400
 
-        return jsonify({"success": True})
+    new_event = CalendarEvent(
+        title=title,
+        start=start,
+        end=end,
+        user_id=current_user.id
+    )
 
-    except Exception as e:
-        import traceback
+    db.session.add(new_event)
+    db.session.commit()
 
-        traceback.print_exc()
-
-        return jsonify({
-            "error": str(e)
-        }), 500
+    return jsonify({
+        "success": True,
+        "id": new_event.id,
+        "title": new_event.title,
+        "start": new_event.start,
+        "end": new_event.end
+    }), 201
 
 
 @views.route('/events/<int:event_id>/delete', methods=['POST'])
