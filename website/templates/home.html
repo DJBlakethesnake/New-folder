@@ -171,22 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log(info.event);
     },
 
-    events: function(fetchInfo, successCallback, failureCallback) {
-
-      fetch(EVENTS_URL)
-        .then(response => response.json())
-        .then(data => {
-
-          console.log("EVENTS RECEIVED:");
-          console.log(data);
-
-          successCallback(data);
-        })
-        .catch(error => {
-          console.error(error);
-          failureCallback(error);
-        });
-},
+    events: EVENTS_URL,
 
     dateClick: function(info) {
 
