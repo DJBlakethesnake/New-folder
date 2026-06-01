@@ -19,14 +19,14 @@ def get_events():
     events = CalendarEvent.query.filter_by(user_id=current_user.id).all()
 
     return jsonify([
-        {
-            "id": event.id,
-            "title": event.title,
-            "start": event.start,
-            "end": event.end,
-        }
-        for event in events
-    ])
+    {
+        "id": event.id,
+        "title": event.title,
+        "start": str(event.start),
+        "end": str(event.end) if event.end else None
+    }
+    for event in events
+])
 
 
 @views.route("/events", methods=["POST"])
