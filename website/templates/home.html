@@ -121,6 +121,17 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
+  function formatDate(date) {
+  return (
+    date.getFullYear() + '-' +
+    String(date.getMonth() + 1).padStart(2, '0') + '-' +
+    String(date.getDate()).padStart(2, '0') + 'T' +
+    String(date.getHours()).padStart(2, '0') + ':' +
+    String(date.getMinutes()).padStart(2, '0') + ':' +
+    String(date.getSeconds()).padStart(2, '0')
+  );
+}
+
   const calendarEl = document.getElementById("calendar");
 
   const EVENTS_URL = "{{ url_for('views.get_events') }}";
@@ -182,9 +193,9 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         body: JSON.stringify({
           title: title,
-          start: startTime.toISOString(),
-          end: endTime.toISOString()
-        })
+          start: formatDate(startTime),
+          end: formatDate(endTime)
+      })
       })
       .then(response => {
         if (!response.ok) {
