@@ -1,25 +1,36 @@
 import os
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
 db = SQLAlchemy()
+
 DB_NAME = "database.db"
 
-def create_app():
-    app = Flask(__name__, instance_relative_config=True)
 
-    os.makedirs(app.instance_path, exist_ok=True)
+def create_app():
+    app = Flask(__name__)
+
+    BASE_DIR = "/home/students/even/2028/bdavis80/public_html/New-folder"
+    INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
+
+    os.makedirs(INSTANCE_DIR, exist_ok=True)
 
     app.config["SECRET_KEY"] = "change-this-secret-key"
-    DB_PATH = "/home/students/even/2028/bdavis80/public_html/New-folder/instance/database.db"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + DB_PATH
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = (
+        "sqlite:///" +
+        os.path.join(INSTANCE_DIR, DB_NAME)
+    )
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
 
     from .views import views
     from .auth import auth
+
     app.register_blueprint(views, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
 
@@ -37,3 +48,4 @@ def create_app():
         return User.query.get(int(id))
 
     return app
+
