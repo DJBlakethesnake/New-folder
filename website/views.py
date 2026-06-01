@@ -50,7 +50,7 @@ def add_event():
     return jsonify({"success": True})
 
 
-@views.route("/events/<int:event_id>", methods=["DELETE"])
+@views.route('/events/<int:event_id>/delete', methods=['POST'])
 @login_required
 def delete_event(event_id):
     event = CalendarEvent.query.get(event_id)
