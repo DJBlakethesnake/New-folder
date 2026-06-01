@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .replace("999999", info.event.id);
 
       fetch(deleteUrl, {
-        method: "DELETE"
+        method: "POST"
       })
       .then(response => {
         if (!response.ok) {
