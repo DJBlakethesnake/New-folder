@@ -223,7 +223,8 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       const deleteUrl =
-        DELETE_EVENT_URL.replace("0", info.event.id);
+        "{{ url_for('views.delete_event', event_id=999999) }}"
+        .replace("999999", info.event.id);
 
       fetch(deleteUrl, {
         method: "DELETE"
