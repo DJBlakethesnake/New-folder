@@ -11,7 +11,7 @@ def create_app():
 
     os.makedirs(app.instance_path, exist_ok=True)
 
-    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-only-change-this")
+    app.config["SECRET_KEY"] = "change-this-secret-key"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(app.instance_path, DB_NAME)
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
