@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.first_name }}'s Calendar{% endblock %}
+
+{% block content %}
+
+<style>
+  .footer {   background-color: #4a0e17;
+   text-align: left;
+   margin: 25px auto 40px auto;
+   padding: 20px;
+   border-radius: 24px;
+   background: rgba(0, 0, 0, 0.9);
+   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+   max-width: 1120px;
+   animation: fadeInUp 0.7s ease;
+   }
+  /* Note: I might change this to incorporate a night vs. dark mode in the future, I just don't have enough time to do so at this moment*/
+  body {
+    background: linear-gradient(135deg, #4a0e17 0%, #2d050b 100%);
+    min-height: 100vh;
+  }
+
+  h1 {
+    margin-top: 5px;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .calendar-wrapper {
+    margin: 25px auto 40px auto;
+    padding: 30px;
+    border-radius: 24px;
+    background: rgba(45, 5, 11, 0.85);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+    animation: fadeInUp 0.8s ease;
+    max-width: 1120px;
+    min-height: 720px;
+  }
+
+  #calendar {
+    animation: fadeIn 1s ease;
+  }
+
+  .fc {
+    font-family: Arial, sans-serif;
+  }
+
+  .fc-toolbar-title {
+    font-size: 2rem !important;
+    font-weight: 700;
+  }
+
+  .fc-button {
+    border-radius: 10px !important;
+    border: none !important;
+    padding: 8px 14px !important;
+    background: #1f2937 !important;
+  }
+
+  .fc-button:hover {
+    background: #374151 !important;
+  }
+
+  .fc-daygrid-day:hover,
+  .fc-timegrid-slot:hover {
+    background-color: #eff6ff !important;
+    cursor: pointer;
+  }
+
+  .fc-day-today {
+    background: #fef3c7 !important;
+  }
+
+  .fc-event {
+    border-radius: 8px !important;
+    padding: 3px 6px;
+    border: none !important;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+  }
+
+  .fc-timegrid-slot {
+    height: 32px !important;
+  }
+  .fc {
+    color: #f3f4f6 !important; 
+  }
+  .fc th, .fc td {
+    border-color: #5c1d24 !important; 
+  }
+  .fc-theme-standard .fc-scrollgrid {
+    border-color: #5c1d24 !important;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<h1 align="center">{{ user.first_name }}'s Calendar</h1>
+
+<div class="calendar-wrapper">
+  <div id="calendar"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const calendarEl = document.getElementById('calendar');
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+
+    height: 650,
+    contentHeight: 560,
+    expandRows: true,
+
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+
+    buttonText: {
+      today: 'today',
+      month: 'month',
+      week: 'week',
+      day: 'day'
+    },
+
+    slotMinTime: '06:00:00',
+    slotMaxTime: '23:00:00',
+    slotDuration: '01:00:00',
+    nowIndicator: true,
+
+    events: '/events',
+
+    dateClick: function(info) {
+      if (info.view.type === 'dayGridMonth') {
+        calendar.changeView('timeGridDay', info.dateStr);
+        return;
+      }
+
+      const title = prompt('Event title:');
+      if (!title) return;
+
+      const startTime = info.date;
+      const endTime = new Date(startTime);
+      endTime.setHours(endTime.getHours() + 1);
+
+      fetch('/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: title,
+          start: startTime.toISOString(),
+          end: endTime.toISOString()
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        calendar.refetchEvents();
+      });
+    },
+
+    eventClick: function(info) {
+      const confirmDelete = confirm(
+        'Delete event: ' + info.event.title + '?'
+      );
+
+      if (!confirmDelete) return;
+
+      fetch('/events/' + info.event.id, {
+        method: 'DELETE'
+      })
+      .then(response => response.json())
+      .then(data => {
+        info.event.remove();
+      });
+    }
+  });
+
+  calendar.render();
+});
+</script>
+
+<div class="footer">
+        <h1 style="font-size: 14px; 
+        text-align:left; color: #d3c481">Meet the Creator</h1>
+        <p style="font-size: 10px; color: #d3c481">
+                Stuyvesant Computer Science Department <br></br>
+                Phone: 212-312-4800 <br></br>
+                Fax: 212-587-3874 <br></br>
+                Name: Blake Davis <br></br>
+                Contact: bdavis80@stuy.edu <br></br>
+                Hobies: Neuroscience, Spanish language and culture, classical and jazz piano, camping, cooking, and annoying my sister. 
+        </p>
+  </div>
+
+{% endblock %}
