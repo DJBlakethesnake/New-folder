@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
 from flask_login import login_required, current_user
 
 from .models import CalendarEvent, Link
@@ -32,34 +32,22 @@ def get_events():
 @views.route("/events", methods=["POST"])
 @login_required
 def add_event():
-    data = request.get_json(silent=True)
+    data = request.get_json()
 
     if not data:
-        return jsonify({"error": "Missing JSON data"}), 400
-
-    title = data.get("title")
-    start = data.get("start")
-    end = data.get("end")
-
-    if not title or not start:
-        return jsonify({"error": "Title and start date are required"}), 400
+        return jsonify({"error": "No JSON received"}), 400
 
     new_event = CalendarEvent(
-        title=title,
-        start=start,
-        end=end,
+        title=data["title"],
+        start=data["start"],
+        end=data.get("end"),
         user_id=current_user.id,
     )
 
     db.session.add(new_event)
     db.session.commit()
 
-    return jsonify({
-        "id": new_event.id,
-        "title": new_event.title,
-        "start": new_event.start,
-        "end": new_event.end,
-    })
+    return jsonify({"success": True})
 
 
 @views.route("/events/<int:event_id>", methods=["DELETE"])
@@ -67,14 +55,9 @@ def add_event():
 def delete_event(event_id):
     event = CalendarEvent.query.get(event_id)
 
-    if not event:
-        return jsonify({"error": "Event not found"}), 404
-
-    if event.user_id != current_user.id:
-        return jsonify({"error": "Unauthorized"}), 403
-
-    db.session.delete(event)
-    db.session.commit()
+    if event and event.user_id == current_user.id:
+        db.session.delete(event)
+        db.session.commit()
 
     return jsonify({"success": True})
 
@@ -83,7 +66,11 @@ def delete_event(event_id):
 @login_required
 def links():
     user_links = Link.query.filter_by(user_id=current_user.id).all()
-    return render_template("links.html", user=current_user, links=user_links)
+    return render_template(
+        "links.html",
+        user=current_user,
+        links=user_links
+    )
 
 
 @views.route("/add-link", methods=["POST"])
@@ -104,7 +91,7 @@ def add_link():
         title=title,
         url=url,
         image_url=image_url,
-        user_id=current_user.id,
+        user_id=current_user.id
     )
 
     db.session.add(new_link)
@@ -123,5 +110,6 @@ def delete_link(link_id):
         db.session.commit()
 
     return redirect(url_for("views.links"))
+
 
 
