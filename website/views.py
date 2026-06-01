@@ -48,11 +48,9 @@ def add_event():
 @login_required
 def delete_event(event_id):
     event = CalendarEvent.query.get(event_id)
-
     if event and event.user_id == current_user.id:
         db.session.delete(event)
         db.session.commit()
-
     return jsonify({})
 
 @views.route('/links')
@@ -85,7 +83,7 @@ def add_link():
     return redirect(url_for('views.links'))
 
 @views.route('/delete-link/<int:link_id>', methods=['POST'])
-@login_required 
+@login_required
 def delete_link(link_id):
     link = Link.query.get(link_id)
     if link and link.user_id == current_user.id:
