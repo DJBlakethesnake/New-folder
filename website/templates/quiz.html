@@ -216,7 +216,66 @@
 }
 
 </style>
-
+<div class="quiz-container">
+    <h1 class="quiz-title">Productivity Quiz</h1>
+    <p class="quiz-subtitle">Watch the video, then complete the quiz.</p>
+    <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/FbSNfj2S6Pw" allowfullscreen></iframe>
+    </div>
+<div id="quiz-box" class="question-card">
+    <form method="POST">
+        {% for question in questions %}
+        <div class="quiz-question">
+            <h3>Question {{ loop.index }} of {{ questions|length }}</h3>
+            <p>{{ question.question }}</p>
+            {% for option in question.options %}
+            <label class="answer-option">
+                <input
+                    type="radio"
+                    name="question_{{ loop.parent.index0 }}"
+                    value="{{ option }}"
+                    required>
+                {{ option }}
+            </label>
+        {% endfor %}
+        </div>
+    {% endfor %}
+    <button type="submit" class="submit-btn">
+            Submit Quiz
+    </button>
+    </form>
+</div>
+{% if results %}
+<div id="result-box" class="result-box">
+    <h2>Quiz Completed!</h2>
+    <div class="final-score">
+        Score: {{ score }} / {{ total }}
+    </div>
+    <div class="review-list">
+        {% for result in results %}
+        <div class="review-item {% if result.correct %}correct-review{% else %}incorrect-review{% endif %}">
+            <div class="review-question">
+                Question {{ loop.index }}: {{ result.question }}
+            </div>
+            <div class="review-answer">
+                Your Answer: {{ result.user_answer }}
+            </div>
+            <div class="review-answer">
+                Correct Answer: {{ result.correct_answer }}
+            </div>
+            {% if result.correct %}
+                <p class="correct-text">Correct</p>
+            {% else %}
+                <p class="incorrect-text">Incorrect</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+    <a href="{{ url_for('views.quiz') }}" class="restart-link">
+        Restart Quiz
+    </a>          
+</div>
+{% endif %}
 <div class="footer">
         <h1 style="font-size: 14px; 
         text-align:left; color: #d3c481">Meet the Creator</h1>
