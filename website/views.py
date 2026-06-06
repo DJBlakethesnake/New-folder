@@ -126,6 +126,42 @@ def delete_link(link_id):
 @views.route('/quiz', methods=['GET', 'POST'])
 @login_required
 def quiz():
-    return render_template("quiz.html", user=current_user)
+    questions = [
+        {
+            "question": "Question text here",
+            "options": [
+                "Option 1"
+                "Option 2"
+                "Option 3"
+                "Option 4"
+            ],
+            "answer": "Input correct answer here"
+        }, #NOTE: Might change questions types later; general format for questions BUT REMEMBER to remove the comma once we decide on the final question.
+    ]
+    results = None
+    score = 0
+    total = len(questions)
+
+    if request.method == 'POST':
+        results = []
+        for index, question in enumerate(questions):
+            user_answer = request.form.get(f'question_{index}')
+            correct = user_answer == questions["answer"]
+            if correct:
+                score += 1
+            results.append({
+                "question": question["question"],
+                "user_answer": user_answer,
+                "correct_answer": question["answer"],
+                "correct": correct
+            })
+    return render_template("quiz.html",
+                           user=current_user,
+                           questions=questions,
+                           results=results,
+                           score=score,
+                           total=total
+                          )
+                
 
 
