@@ -3,5 +3,45 @@
 {% block title %}Productivity Quiz{% endblock %}
 
 {% block content %}
+<style>
+    .footer {   background-color: #4a0e17;
+   text-align: left;
+   margin: 25px auto 40px auto;
+   padding: 20px;
+   border-radius: 24px;
+   background: rgba(0, 0, 0, 0.9);
+   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+   max-width: 1120px;
+   animation: fadeInUp 0.7s ease;
+   }
+   body {
+    background: linear-gradient(135deg, #4a0e17 0%, #2d050b 100%);
+    min-height: 100vh;
+  }
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+</style>
+
+<div class="footer">
+        <h1 style="font-size: 14px; 
+        text-align:left; color: #d3c481">Meet the Creator</h1>
+        <p style="font-size: 10px; color: #d3c481">
+                Stuyvesant Computer Science Department <br></br>
+                Phone: 212-312-4800 <br></br>
+                Fax: 212-587-3874 <br></br>
+                Name: Blake Davis <br></br>
+                Contact: bdavis80@stuy.edu <br></br>
+                Hobies: Neuroscience, Spanish language and culture, classical and jazz piano, camping, cooking, and annoying my sister. 
+        </p>
+  </div>
 
 {% endblock %}
