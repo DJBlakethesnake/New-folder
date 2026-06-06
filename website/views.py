@@ -123,6 +123,9 @@ def delete_link(link_id):
         db.session.commit()
 
     return redirect(url_for("views.links"))
-
+@views.route('/Quiz', methods=['GET', 'POST'])
+@login_required
+def quiz():
+    return render_template("quiz.html", user=current_user)
 
 
