@@ -128,11 +128,11 @@ def delete_link(link_id):
 def quiz():
     questions = [
         {
-            "question": "Question text here",
+            "question": "When confronted with day-to-day tasks, we tend to overthink the repetitiveness of our actions and dwell on negativity. Practicing the Shift in Mindset principle encourages a positive mindset and fosters motivation. One example of this principle is: ",
             "options": [
-                "Option 1"
-                "Option 2"
-                "Option 3"
+                "Scrutinizing yourself about your mistakes"
+                "Ignoring the negativity"
+                ""
                 "Option 4"
             ],
             "answer": "Input correct answer here"
