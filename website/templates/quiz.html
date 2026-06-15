@@ -58,7 +58,7 @@
 }
 
 .question-card {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(248, 248, 248, 0);
     padding: 28px;
     border-radius: 16px;
     margin-bottom: 25px;
@@ -88,6 +88,12 @@
     cursor: pointer;
     transition: all 0.25s ease;
     font-size: 16px;
+}
+
+.answer-option {
+    display: block;
+    margin: 10px 0;
+    color: white;
 }
 
 .answer-btn:hover {
@@ -151,7 +157,7 @@
 }
 
 .result-box {
-    display: none;
+    display: block;
     background: rgba(255, 255, 255, 0.06);
     padding: 30px;
     border-radius: 16px;
@@ -220,26 +226,36 @@
     <h1 class="quiz-title">Productivity Quiz</h1>
     <p class="quiz-subtitle">Watch the video, then complete the quiz.</p>
     <div class="video-card">
-        <iframe src="https://www.youtube.com/embed/FbSNfj2S6Pw" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/FbSNfj2S6Pw"
+    title="Productivity video"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen></iframe>
     </div>
+<p style="color: white; text-align: center;">
+    If the video does not load,
+    <a href="https://www.youtube.com/watch?v=FbSNfj2S6Pw" target="_blank">
+        watch it directly on YouTube
+    </a>.
+</p>
 <div id="quiz-box" class="question-card">
     <form method="POST">
-        {% for question in questions %}
-        <div class="quiz-question">
-            <h3>Question {{ loop.index }} of {{ questions|length }}</h3>
-            <p>{{ question.question }}</p>
-            {% for option in question.options %}
+    {% for question in questions %}
+    {% set question_index = loop.index0 %}
+    <div class="quiz-question">
+        <h3>Question {{ loop.index }} of {{ questions|length }}</h3>
+        <p>{{ question.question }}</p>
+        {% for option in question.options %}
             <label class="answer-option">
                 <input
                     type="radio"
-                    name="question_{{ loop.parent.index0 }}"
+                    name="question_{{ question_index }}"
                     value="{{ option }}"
                     required>
                 {{ option }}
             </label>
         {% endfor %}
-        </div>
-    {% endfor %}
+    </div>
+{% endfor %}
     <button type="submit" class="submit-btn">
             Submit Quiz
     </button>
