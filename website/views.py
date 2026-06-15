@@ -4,6 +4,58 @@ from flask_login import login_required, current_user
 from .models import CalendarEvent, Link
 from . import db
 
+import csv
+import os
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from collections import Counter
+
+SCORES_FILE = "quiz_scores.csv"
+CHART_FILE = "website/static/score_chart.png"
+
+DEVELOPER_PASSWORD = "12345678"
+
+
+def save_score(score, total):
+    file_exists = os.path.exists(SCORES_FILE)
+
+    with open(SCORES_FILE, "a", newline="") as file:
+        writer = csv.writer(file)
+
+        if not file_exists:
+            writer.writerow(["score", "total"])
+
+        writer.writerow([score, total])
+
+
+def create_score_chart():
+    scores = []
+
+    if not os.path.exists(SCORES_FILE):
+        return
+
+    with open(SCORES_FILE, "r") as file:
+        reader = csv.DictReader(file)
+
+        for row in reader:
+            scores.append(int(row["score"]))
+
+    score_counts = Counter(scores)
+
+    x_values = sorted(score_counts.keys())
+    y_values = [score_counts[x] for x in x_values]
+
+    plt.figure(figsize=(8, 5))
+    plt.bar(x_values, y_values)
+    plt.xlabel("Score")
+    plt.ylabel("Number of Students")
+    plt.title("Quiz Score Distribution")
+    plt.xticks(range(0, max(x_values) + 1))
+    plt.tight_layout()
+    plt.savefig(CHART_FILE)
+    plt.close()
+
 views = Blueprint("views", __name__)
 
 
@@ -137,6 +189,26 @@ def quiz():
                 "Giving up when tasks feel repetitive"
             ],
             "answer": "Ignoring the negativity and choosing a more constructive perspective"
+        },
+        {
+            "question": "What is an effective method of motivating oneself to complete tasks?",
+            "options": [
+                "Gamification",
+                "Depriving oneself of enjoyable activities until a task is completed",
+                "Doing nothing until motivation appears",
+                "Nothing, motivation sucks"
+            ],
+            "answer": "Gamification"
+        },
+        {
+            "question": "When completing tasks, we often confuse efficiency with rapid completion, not thoughtful completion. What is one strategy used to overcome this?",
+            "options": [
+                "Sacrificing speed for quality, even if you are limited on time",
+                "Working solo and spend an extreme amount of time on each tasks",
+                "Accepting the poorer quality and continuing on practicing the same level of 'efficiency'",
+                "Bringing others on board"
+            ],
+            "answer": "Bringing others on board"
         }
     ]
 
@@ -160,7 +232,8 @@ def quiz():
                 "correct_answer": question["answer"],
                 "correct": correct
             })
-
+        save_score(score, total)
+        create_score_chart()
     return render_template(
         "quiz.html",
         user=current_user,
@@ -168,4 +241,30 @@ def quiz():
         results=results,
         score=score,
         total=total
+    )
+
+@views.route("/developer", methods=["GET", "POST"])
+def developer():
+
+    if current_user.is_authenticated:
+        return redirect(url_for("views.home"))
+
+    if request.method == "POST":
+        entered = request.form.get("password")
+
+        if entered == DEVELOPER_PASSWORD:
+            with open("user_data.txt", "r", encoding="utf-8") as file:
+                data = file.read()
+
+            return render_template(
+                "developer_view.html",
+                user=current_user,
+                data=data
+            )
+
+        return redirect(url_for("views.developer"))
+
+    return render_template(
+        "developer_login.html",
+        user=current_user
     )
