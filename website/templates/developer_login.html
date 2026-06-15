@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Developer Access{% endblock %}
+
+{% block content %}
+<h1>Developer Access</h1>
+
+<form method="POST">
+    <input
+        type="password"
+        name="password"
+        placeholder="Developer Password"
+        required>
+
+    <button type="submit">Enter</button>
+</form>
+{% endblock %}
