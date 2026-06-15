@@ -206,6 +206,19 @@
     margin: 4px 0;
 }
 
+.chart-box {
+    margin-top: 30px;
+    text-align: center;
+    color: white;
+}
+
+.chart-box img {
+    max-width: 100%;
+    border-radius: 12px;
+    background-color: white;
+    padding: 10px;
+}
+
 @media (max-width: 700px) {
     .quiz-container {
         margin: 20px;
@@ -290,6 +303,10 @@
     <a href="{{ url_for('views.quiz') }}" class="restart-link">
         Restart Quiz
     </a>          
+</div>
+<div class="chart-box">
+        <h2>Score Distribution</h2>
+        <img src="{{ url_for('static', filename='score_chart.png') }}" alt="Score distribution chart">
 </div>
 {% endif %}
 <div class="footer">
