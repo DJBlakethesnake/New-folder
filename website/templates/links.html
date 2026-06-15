@@ -88,41 +88,24 @@
 <div class="links-page">
   <h1 class="links-header">{{ user.first_name }}'s Links</h1>
 
-  <form method="POST"
-      action="{{ url_for('views.add_link') }}"
-      class="add-link-form">
+  <form method="POST" action="/add-link" class="add-link-form">
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" name="title" class="form-control" placeholder="Example: Google Classroom" required>
+    </div>
 
-  <div class="form-group">
-    <label>Title</label>
-    <input type="text"
-           name="title"
-           class="form-control"
-           placeholder="Example: Google Classroom"
-           required>
-  </div>
+    <div class="form-group">
+      <label>Link URL</label>
+      <input type="url" name="url" class="form-control" placeholder="https://example.com" required>
+    </div>
 
-  <div class="form-group">
-    <label>Link URL</label>
-    <input type="url"
-           name="url"
-           class="form-control"
-           placeholder="https://example.com"
-           required>
-  </div>
+    <div class="form-group">
+      <label>Photo URL</label>
+      <input type="url" name="image_url" class="form-control" placeholder="https://example.com/image.jpg">
+    </div>
 
-  <div class="form-group">
-    <label>Photo URL</label>
-    <input type="url"
-           name="image_url"
-           class="form-control"
-           placeholder="https://example.com/image.jpg">
-  </div>
-
-  <button type="submit" class="btn btn-primary">
-    Add Link Widget
-  </button>
-
-</form>
+    <button type="submit" class="btn btn-primary">Add Link Widget</button>
+  </form>
 
   <div class="links-scroll-area">
     <div class="row">
@@ -130,18 +113,9 @@
       <div class="card-body">
         <h5 class="card-title">{{ link.title }}</h5>
         <a href="{{ link.url }}" target="_blank" class="btn btn-dark open-link-btn">Open Link</a>
-        <form method="POST"
-      action="{{ url_for('views.delete_link', link_id=link.id) }}"
-      style="display:inline;">
-
-    <button
-        type="submit"
-        class="btn btn-danger"
-        onclick="return confirm('Delete this link?');">
-        Delete
-    </button>
-
-</form>
+        <form method="POST" action="/delete-link/{{ link.id }}" style="display: inline;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this link?');">Delete</button>"
+        </form>
         </div>
       {% endfor %}
     </div>
@@ -156,7 +130,7 @@
                 Fax: 212-587-3874 <br></br>
                 Name: Blake Davis <br></br>
                 Contact: bdavis80@stuy.edu <br></br>
-                Hobbies: Neuroscience, Spanish language and culture, classical and jazz piano, camping, cooking, and annoying my sister. 
+                Hobies: Neuroscience, Spanish language and culture, classical and jazz piano, camping, cooking, and annoying my sister. 
         </p>
   </div>
 
