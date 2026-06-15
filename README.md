@@ -3,3 +3,4 @@ Also, for functionally, please run the following:
 pip install flask
 pip install Flask-SQLAlchemy
 pip install flask-login
+pip install matplotlib
