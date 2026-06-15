@@ -123,45 +123,49 @@ def delete_link(link_id):
         db.session.commit()
 
     return redirect(url_for("views.links"))
+
 @views.route('/quiz', methods=['GET', 'POST'])
 @login_required
 def quiz():
     questions = [
         {
-            "question": "When confronted with day-to-day tasks, we tend to overthink the repetitiveness of our actions and dwell on negativity. Practicing the Shift in Mindset principle encourages a positive mindset and fosters motivation. One example of this principle is: ",
+            "question": "When confronted with day-to-day tasks, we tend to overthink the repetitiveness of our actions and dwell on negativity. Practicing the Shift in Mindset principle encourages a positive mindset and fosters motivation. One example of this principle is:",
             "options": [
-                "Scrutinizing yourself about your mistakes"
-                "Ignoring the negativity"
-                ""
-                "Option 4"
+                "Scrutinizing yourself about your mistakes",
+                "Ignoring the negativity and choosing a more constructive perspective",
+                "Doing nothing until motivation appears",
+                "Giving up when tasks feel repetitive"
             ],
-            "answer": "Input correct answer here"
-        }, #NOTE: Might change questions types later; general format for questions BUT REMEMBER to remove the comma once we decide on the final question.
+            "answer": "Ignoring the negativity and choosing a more constructive perspective"
+        }
     ]
+
     results = None
     score = 0
     total = len(questions)
 
     if request.method == 'POST':
         results = []
+
         for index, question in enumerate(questions):
             user_answer = request.form.get(f'question_{index}')
-            correct = user_answer == questions["answer"]
+            correct = user_answer == question["answer"]
+
             if correct:
                 score += 1
+
             results.append({
                 "question": question["question"],
                 "user_answer": user_answer,
                 "correct_answer": question["answer"],
                 "correct": correct
             })
-    return render_template("quiz.html",
-                           user=current_user,
-                           questions=questions,
-                           results=results,
-                           score=score,
-                           total=total
-                          )
-                
 
-
+    return render_template(
+        "quiz.html",
+        user=current_user,
+        questions=questions,
+        results=results,
+        score=score,
+        total=total
+    )
