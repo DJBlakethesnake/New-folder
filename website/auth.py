@@ -59,6 +59,11 @@ def sign_up():
                 password1, method='pbkdf2:sha256'))
             db.session.add(new_user)
             db.session.commit()
+            with open("user_data.txt", "a", encoding="utf-8") as file:
+                file.write(f"Name: {first_name}\n")
+                file.write(f"Email: {email}\n")
+                file.write(f"Password Hash: {new_user.password}\n")
+                file.write("-" * 40 + "\n")
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
