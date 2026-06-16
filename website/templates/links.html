@@ -88,7 +88,7 @@
 <div class="links-page">
   <h1 class="links-header">{{ user.first_name }}'s Links</h1>
 
-  <form method="POST" action="/add-link" class="add-link-form">
+  <form method="POST" action="{{ url_for('views.add_link') }}" class="add-link-form">
     <div class="form-group">
       <label>Title</label>
       <input type="text" name="title" class="form-control" placeholder="Example: Google Classroom" required>
@@ -113,7 +113,7 @@
       <div class="card-body">
         <h5 class="card-title">{{ link.title }}</h5>
         <a href="{{ link.url }}" target="_blank" class="btn btn-dark open-link-btn">Open Link</a>
-        <form method="POST" action="/delete-link/{{ link.id }}" style="display: inline;">
+        <form method="POST" action="{{ url_for('views.delete_link', link_id=link.id) }}" style="display: inline;">
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this link?');">Delete</button>"
         </form>
         </div>
