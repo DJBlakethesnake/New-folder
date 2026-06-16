@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}User Data{% endblock %}
+{% block title %}Developer Access{% endblock %}
 
 {% block content %}
-<h1>User Data</h1>
+<h1>Developer Access</h1>
 
-<pre>
-{{ data }}
-</pre>
+<form method="POST">
+    <input
+        type="password"
+        name="password"
+        placeholder="Developer Password"
+        required>
+
+    <button type="submit">Enter</button>
+</form>
 {% endblock %}
