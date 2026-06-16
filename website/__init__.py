@@ -46,5 +46,11 @@ def create_app():
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
+    
+    import traceback
 
+    @app.errorhandler(Exception)
+    def show_error(e):
+        return "<pre>" + traceback.format_exc() + "</pre>", 500
+    
     return app
