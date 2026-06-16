@@ -3,7 +3,10 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db   
 from flask_login import login_user, login_required, logout_user, current_user
+import os
 
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+USER_DATA_FILE = os.path.join(BASE_DIR, "user_data.txt")
 
 auth = Blueprint('auth', __name__)
 
@@ -59,7 +62,7 @@ def sign_up():
                 password1, method='pbkdf2:sha256'))
             db.session.add(new_user)
             db.session.commit()
-            with open("user_data.txt", "a", encoding="utf-8") as file:
+            with open(USER_DATA_FILE, "a", encoding="utf-8") as file:
                 file.write(f"Name: {first_name}\n")
                 file.write(f"Email: {email}\n")
                 file.write(f"Password Hash: {new_user.password}\n")
