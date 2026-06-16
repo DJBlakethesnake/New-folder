@@ -11,8 +11,10 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from collections import Counter
 
-SCORES_FILE = "quiz_scores.csv"
-CHART_FILE = "website/static/score_chart.png"
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+SCORES_FILE = os.path.join(BASE_DIR, "quiz_scores.csv")
+CHART_FILE = os.path.join(BASE_DIR, "website", "static", "score_chart.png")
 
 DEVELOPER_PASSWORD = "12345678"
 
@@ -245,25 +247,22 @@ def quiz():
 
 @views.route("/developer", methods=["GET", "POST"])
 def developer():
-
     if current_user.is_authenticated:
         return redirect(url_for("views.home"))
-
     if request.method == "POST":
-        entered = request.form.get("password")
-
-        if entered == DEVELOPER_PASSWORD:
-            with open("user_data.txt", "r", encoding="utf-8") as file:
-                data = file.read()
-
+        entered_password = request.form.get("password")
+        if entered_password == DEVELOPER_PASSWORD:
+            if os.path.exists(USER_DATA_FILE):
+                with open(USER_DATA_FILE, "r", encoding="utf-8") as file:
+                    data = file.read()
+            else:
+                data = "No user data has been recorded yet."
             return render_template(
                 "developer_view.html",
                 user=current_user,
                 data=data
             )
-
         return redirect(url_for("views.developer"))
-
     return render_template(
         "developer_login.html",
         user=current_user
